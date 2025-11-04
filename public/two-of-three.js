@@ -1,3 +1,8 @@
+// Optimal probability of untoggling the most recently toggled to get fastest shuffling
+// (which makes it just a little more frustrating for the user 🙂).
+// Approximately 46.4%.
+const optimalP = 2 * Math.sqrt(3) - 3;
+
 class TwoOfThree extends HTMLElement {
   constructor() {
     super();
@@ -24,7 +29,7 @@ class TwoOfThree extends HTMLElement {
         this.history.push(target);
         
         if (this.history.length > 2) {
-          const toTurnOff = this.history[this.history.length - (Math.random() < 0.5 ? 3 : 2)];
+          const toTurnOff = this.history[this.history.length - (Math.random() < optimalP ? 2 : 3)];
           if (toTurnOff) {
             toTurnOff.on = false;
             this.history.splice(this.history.indexOf(toTurnOff), 1);
