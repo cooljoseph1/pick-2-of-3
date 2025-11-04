@@ -74,4 +74,4 @@ class TwoOfThree extends HTMLElement {
   }
 }
 
-customElements.define('two-of-three', TwoOutOfThree);
+customElements.define('two-of-three', TwoOfThree);
