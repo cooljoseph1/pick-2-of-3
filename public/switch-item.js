@@ -30,11 +30,6 @@ class SwitchItem extends HTMLElement {
       this.startEditing();
     });
 
-    // Make the element focusable
-    if (!this.hasAttribute('tabindex')) {
-      this.setAttribute('tabindex', '0');
-    }
-
     // Keydown handler for the switch-item
     this.addEventListener('keydown', (e) => {
       if (this.isEditing) {
@@ -42,27 +37,15 @@ class SwitchItem extends HTMLElement {
         if (e.key === 'Enter') {
           e.preventDefault();
           this.stopEditing(true);
+          this.focus();
         } else if (e.key === 'Escape') {
           e.preventDefault();
+          e.stopPropagation(); // Prevent escape from bubbling to parent
           this.stopEditing(false);
+          this.focus();
         } else if (e.key === 'Tab') {
           e.preventDefault();
-          this.stopEditing(true);
-          
-          // Find parent two-out-of-three component
-          const parent = this.closest('two-out-of-three');
-          if (parent) {
-            const switches = Array.from(parent.querySelectorAll('switch-item'));
-            const currentIndex = switches.indexOf(this);
-            if (currentIndex !== -1) {
-              const nextIndex = e.shiftKey 
-                ? (currentIndex === 0 ? switches.length - 1 : currentIndex - 1)
-                : (currentIndex + 1) % switches.length;
-              const nextSwitch = switches[nextIndex];
-              nextSwitch.focus();
-              setTimeout(() => nextSwitch.startEditing(), 0);
-            }
-          }
+          this.focus();
         }
       } else {
         // Non-editing mode key handlers
@@ -88,16 +71,6 @@ class SwitchItem extends HTMLElement {
     input.type = 'text';
     input.value = currentText;
     input.className = 'label-input';
-    input.style.cssText = `
-      font-size: 18px;
-      color: #333;
-      border: 2px solid #667eea;
-      border-radius: 4px;
-      padding: 2px 6px;
-      background: white;
-      outline: none;
-      width: 100%;
-    `;
     
     labelEl.textContent = '';
     labelEl.appendChild(input);
@@ -106,13 +79,6 @@ class SwitchItem extends HTMLElement {
     
     this._originalText = currentText;
     this._input = input;
-    
-    // Blur handler saves
-    input.addEventListener('blur', () => {
-      if (this.isEditing) {
-        this.stopEditing(true);
-      }
-    });
   }
 
   stopEditing(save) {
@@ -132,9 +98,6 @@ class SwitchItem extends HTMLElement {
     
     this._input = null;
     this._originalText = null;
-    
-    // Regain focus after editing
-    this.focus();
   }
 
   toggle() {
