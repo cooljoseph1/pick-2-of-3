@@ -1,4 +1,4 @@
-# Pick 2 out of 3
+# Pick 2 of 3
 This is a super simple implementation of the classic "Fast, Good, Cheap: Pick 2". It was made with copious help from Claude AI, so don't expect super high quality code.
 
 ## Screenshot
